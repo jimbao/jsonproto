@@ -1,4 +1,4 @@
-# json_to_proto
+# jsonproto
 Make protobuf messages without generating protos or reflection
 
 Convert json into proto bytes on stdout

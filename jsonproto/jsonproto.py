@@ -21,7 +21,12 @@ import hashlib
 from argparse import ArgumentParser, Namespace
 from typing import Tuple
 
-from google.protobuf import json_format, descriptor_pb2, message_factory, descriptor_pool
+from google.protobuf import (
+    json_format,
+    descriptor_pb2,
+    message_factory,
+    descriptor_pool,
+)
 from google.protobuf.message import Message
 from collections import OrderedDict
 
@@ -34,7 +39,7 @@ field_types = {
     dict: descriptor_pb2.FieldDescriptorProto.TYPE_MESSAGE,
 }
 
-file_prefix = "json_to_proto.v1.Generated_"
+file_prefix = "jsonproto.v1.Generated_"
 
 
 def create_parser() -> ArgumentParser:
@@ -58,14 +63,18 @@ def find_proto_class(pool: descriptor_pool.DescriptorPool, name: str) -> Message
 def get_proto_name(dict_data: dict) -> str:
     fields_hash = hashlib.sha1()
     for f_name, f_type in dict_data.items():
-        fields_hash.update(f_name.encode('utf-8'))
-        fields_hash.update(str(f_type).encode('utf-8'))
+        fields_hash.update(f_name.encode("utf-8"))
+        fields_hash.update(str(f_type).encode("utf-8"))
     proto_class_name = file_prefix + fields_hash.hexdigest()
     return proto_class_name
 
 
-def create_proto_class(data: dict, field_numbers={}, field_key="",
-                       pool_instance=descriptor_pool.DescriptorPool()) -> Message:
+def create_proto_class(
+    data: dict,
+    field_numbers={},
+    field_key="",
+    pool_instance=descriptor_pool.DescriptorPool(),
+) -> Message:
     proto_class_name = get_proto_name(data)
     proto_file_name = proto_class_name + ".proto"
 
@@ -77,9 +86,9 @@ def create_proto_class(data: dict, field_numbers={}, field_key="",
         pass
 
     type_data = {k: field_types[type(v)] for k, v in data.items()}
-    package, name = proto_class_name.rsplit('.', 1)
+    package, name = proto_class_name.rsplit(".", 1)
     file_proto = descriptor_pb2.FileDescriptorProto()
-    file_proto.name = os.path.join(package.replace('.', '/'), proto_file_name)
+    file_proto.name = os.path.join(package.replace(".", "/"), proto_file_name)
     file_proto.package = package
     desc_proto = file_proto.message_type.add()
     desc_proto.name = name
@@ -96,7 +105,7 @@ def create_proto_class(data: dict, field_numbers={}, field_key="",
                 data=data[k],
                 field_numbers=field_numbers,
                 field_key=field_key + k + ".",
-                pool_instance=pool_instance
+                pool_instance=pool_instance,
             )
 
     pool_instance.Add(file_proto)
@@ -123,5 +132,5 @@ def main():
     run(args)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

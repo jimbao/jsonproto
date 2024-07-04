@@ -13,6 +13,8 @@ dependencies = [
 [project.optional-dependencies]
 dev = [
     "pytest",
+    "tox",
+    "ruff",
 ]
 
 [project.scripts]
