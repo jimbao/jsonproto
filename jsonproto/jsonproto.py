@@ -18,6 +18,7 @@ import json
 import os
 import sys
 import hashlib
+from importlib.metadata import version
 from argparse import ArgumentParser, Namespace
 from typing import Tuple
 
@@ -49,6 +50,9 @@ def create_parser() -> ArgumentParser:
     )
     argument_parser.add_argument(
         "--field-numbers", default="{}", type=str, help="Field numbers for proto"
+    )
+    argument_parser.add_argument(
+        "--version", help="Print version and exit", action="store_true"
     )
 
     return argument_parser
@@ -129,6 +133,9 @@ def run(args: Namespace):
 def main():
     parser = create_parser()
     args = parser.parse_args()
+    if args.version:
+        sys.stdout.buffer.write((version("jsonproto") + "\n").encode("utf-8"))
+        exit(0)
     run(args)
 
 
