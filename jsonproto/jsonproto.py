@@ -8,9 +8,9 @@ Write proto format to stdout from json data
 
 Example:
 
-$ python json_to_proto.py --data '{"name": "John", "age": 30, "details" : {"ssn": "blah"}}' --field-numbers '{"name": 1, "age": 2, "details.ssn": 5}' > output.bin
-$ python json_to_proto.py --data '{"name": "John", "age": 30}' --field-numbers '{"name": 1, "age": 2}' > output.bin
-$ python json_to_proto.py --data '{"name": "John", "age": 30}' > output.bin
+$ python jsonproto.py --data '{"name": "John", "age": 30, "details" : {"ssn": "blah"}}' --field-numbers '{"name": 1, "age": 2, "details.ssn": 5}' > output.bin
+$ python jsonproto.py --data '{"name": "John", "age": 30}' --field-numbers '{"name": 1, "age": 2}' > output.bin
+$ python jsonproto.py --data '{"name": "John", "age": 30}' > output.bin
 
 """
 
@@ -121,3 +121,7 @@ def main():
     parser = create_parser()
     args = parser.parse_args()
     run(args)
+
+
+if __name__ == '__main__':
+    main()
