@@ -18,7 +18,7 @@ dev = [
 ]
 
 [project.scripts]
-jsonproto = "jsonproto.json_to_proto:main"
+jsonproto = "jsonproto.jsonproto:main"
 
 [tool.setuptools]
 include-package-data = false

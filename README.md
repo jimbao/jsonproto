@@ -11,7 +11,7 @@ Convert json into proto bytes on stdout
 Examples:
 ```bash
 
-$ jsonproto --data '{"name": "John", "age": 30, "details" : {"ssn": "blah"}}' --field-numbers '{"name": 1, "age": 2, "details.ssn": 5}' > output.bin
-$ jsonproto --data '{"name": "John", "age": 30}' --field-numbers '{"name": 1, "age": 2}' > output.bin
-$ jsonproto --data '{"name": "John", "age": 30}' > output.bin
+$ jsonproto --data '{"name": "Jimmy", "age": 42, "details" : {"ssn": "blah"}}' --field-numbers '{"name": 1, "age": 2, "details.ssn": 5}' > output.bin
+$ jsonproto --data '{"name": "Jimmy", "age": 42}' --field-numbers '{"name": 1, "age": 2}' > output.bin
+$ jsonproto --data '{"name": "Jimmy", "age": 42}' > output.bin
 ```
