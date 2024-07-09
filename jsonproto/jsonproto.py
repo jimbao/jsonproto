@@ -20,7 +20,7 @@ import sys
 import hashlib
 from importlib.metadata import version
 from argparse import ArgumentParser, Namespace
-from typing import Tuple
+from typing import Tuple, Union
 
 from google.protobuf import (
     json_format,
@@ -74,7 +74,7 @@ def get_proto_name(dict_data: dict) -> str:
 
 
 def create_proto_class(
-    data: dict,
+    data: Union[dict, list],
     field_numbers={},
     field_key="",
     pool_instance=descriptor_pool.DescriptorPool(),
@@ -89,7 +89,6 @@ def create_proto_class(
         # The factory's DescriptorPool doesn't know about this class yet.
         pass
 
-    type_data = {k: field_types[type(v)] for k, v in data.items()}
     package, name = proto_class_name.rsplit(".", 1)
     file_proto = descriptor_pb2.FileDescriptorProto()
     file_proto.name = os.path.join(package.replace(".", "/"), proto_file_name)
@@ -97,16 +96,29 @@ def create_proto_class(
     desc_proto = file_proto.message_type.add()
     desc_proto.name = name
 
-    for i, (k, v) in enumerate(type_data.items(), 1):
+    for i, (k, v) in enumerate(data.items(), 1):
         field_proto = desc_proto.field.add()
+        default = descriptor_pb2.FieldDescriptorProto()
+        field_type = default.type
+        value = None
+
+        if isinstance(v, list):
+            field_proto.label = descriptor_pb2.FieldDescriptorProto.LABEL_REPEATED
+            if v:
+                field_type = field_types[type(v[-1])]
+                value = v[-1]
+        else:
+            field_type = field_types[type(v)]
+            field_proto.label = descriptor_pb2.FieldDescriptorProto.LABEL_OPTIONAL
+            value = v
+
         field_proto.name = k
-        field_proto.type = v
         field_proto.number = field_numbers.get(field_key + k) or i
-        field_proto.label = descriptor_pb2.FieldDescriptorProto.LABEL_OPTIONAL
-        if v == descriptor_pb2.FieldDescriptorProto.TYPE_MESSAGE:
-            field_proto.type_name = get_proto_name(data[k])
+        field_proto.type = field_type
+        if field_type == descriptor_pb2.FieldDescriptorProto.TYPE_MESSAGE:
+            field_proto.type_name = get_proto_name(value)
             create_proto_class(
-                data=data[k],
+                data=value,
                 field_numbers=field_numbers,
                 field_key=field_key + k + ".",
                 pool_instance=pool_instance,
