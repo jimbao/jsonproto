@@ -4,8 +4,10 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "jsonproto"
-version = "0.0.2"
+version = "0.0.3"
+description = "Convert json payloads into protobuf messages"
 readme = "README.md"
+license = {file = "LICENSE"}
 authors = [{name = "Jimmy Wahlberg", email = "jimmy.wahlberg@gmail.com"}]
 requires-python = ">=3.8"
 dependencies = [
@@ -20,6 +22,9 @@ dev = [
 
 [project.scripts]
 jsonproto = "jsonproto.jsonproto:main"
+
+[project.urls]
+Homepage = "https://github.com/jimbao/jsonproto"
 
 [tool.setuptools]
 include-package-data = false
